@@ -8,7 +8,7 @@ import numpy as np
 myheading1='California Housing Dataset'
 tabtitle = 'Cali Housing'
 sourceurl = 'https://github.com/ageron/handson-ml2/blob/master/02_end_to_end_machine_learning_project.ipynb'
-githublink = 'https://github.com/plotly-dash-apps/502-california-housing-regression'
+githublink = 'https://github.com/amakarewycz/502-california-housing-regression'
 
 
 ########### open the pickle files ######
@@ -22,6 +22,11 @@ with open('analysis/model_components/std_scaler.pkl', 'rb') as f:
     std_scaler=pickle.load(f)
 with open('analysis/model_components/lin_reg.pkl', 'rb') as f:
     lin_reg=pickle.load(f)
+with open('analysis/model_components/knn_model.pkl', 'rb') as f:
+    knn_model=pickle.load(f)
+    
+model = knn_model
+
 
 ########### Initiate the app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -99,7 +104,7 @@ app.layout = html.Div(children=[
                 ], className='twelve columns'),
 
         html.Div(children=[
-                html.H3('Linear Regression Coefficients (standardized features)'),
+                html.H3('k-Nearest Neighbor Model Coefficients (standardized features)'),
                 dcc.Graph(figure=coefs, id='coefs_fig')
                 ], className='twelve columns'),
 
@@ -143,8 +148,8 @@ def make_prediction(clicks, longitude, latitude, housing_median_age, total_rooms
 
         # standardization
         std_inputs = std_scaler.transform(inputs)
-
-        y = lin_reg.predict(std_inputs)
+        
+        y = model.predict(std_inputs)
         formatted_y = "${:,.2f}".format(y[0])
         return formatted_y
 
